@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: watch-party
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DAILY_API_KEY
+        sync: false
