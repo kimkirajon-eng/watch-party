@@ -35,12 +35,12 @@
   const updateVoiceStatus = (status) => {
     if (!voiceStatus) return;
     const icons = {
-      'waiting': 'Sesli sohbet için diğer kişi bekleniyor...',
-      'connecting': 'Sesli sohbet bağlanıyor...',
-      'connected': 'Sesli sohbet bağlandı',
-      'muted': 'Sesiniz kapalı',
-      'disconnected': 'Bağlantı koptu, yeniden bağlanılıyor...',
-      'mic-error': 'Mikrofona erişilemedi',
+      'waiting': 'Sesli sohbet iÃ§in diÄŸer kiÅŸi bekleniyor...',
+      'connecting': 'Sesli sohbet baÄŸlanÄ±yor...',
+      'connected': 'Sesli sohbet baÄŸlandÄ±',
+      'muted': 'Sesiniz kapalÄ±',
+      'disconnected': 'BaÄŸlantÄ± koptu, yeniden baÄŸlanÄ±lÄ±yor...',
+      'mic-error': 'Mikrofona eriÅŸilemedi',
     };
     voiceStatus.textContent = icons[status] || status;
     voiceStatus.className = 'voice-status ' + status;
@@ -83,8 +83,12 @@
     return null;
   };
 
+  let apiReadyPromise = null;
+  let pendingVideoId = null;
+
   const loadYouTubeAPI = () => {
-    return new Promise((resolve) => {
+    if (apiReadyPromise) return apiReadyPromise;
+    apiReadyPromise = new Promise((resolve) => {
       if (window.YT && window.YT.Player) {
         resolve();
         return;
@@ -93,8 +97,16 @@
       tag.src = 'https://www.youtube.com/iframe_api';
       const first = document.getElementsByTagName('script')[0];
       first.parentNode.insertBefore(tag, first);
-      window.onYouTubeIframeAPIReady = resolve;
+      window.onYouTubeIframeAPIReady = () => {
+        resolve();
+        if (pendingVideoId) {
+          const vid = pendingVideoId;
+          pendingVideoId = null;
+          createPlayer(vid);
+        }
+      };
     });
+    return apiReadyPromise;
   };
 
   const createPlayer = (videoId) => {
@@ -182,12 +194,12 @@
 
   const setSyncStatus = (connected) => {
     syncDot.className = `sync-dot ${connected ? '' : 'disconnected'}`;
-    syncLabel.textContent = connected ? 'Senkronize' : 'Bağlantı kesildi';
+    syncLabel.textContent = connected ? 'Senkronize' : 'BaÄŸlantÄ± kesildi';
   };
 
   const updateUserList = (users) => {
     if (!users || users.length === 0) {
-      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">Katılımcı bekleniyor...</li>';
+      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">KatÄ±lÄ±mcÄ± bekleniyor...</li>';
       return;
     }
     userList.innerHTML = users.map(u => `
@@ -240,7 +252,7 @@
 
   socket.on('user-joined', (data) => {
     const items = userList.querySelectorAll('li');
-    if (items.length === 1 && items[0].textContent.includes('Katılımcı bekleniyor')) {
+    if (items.length === 1 && items[0].textContent.includes('KatÄ±lÄ±mcÄ± bekleniyor')) {
       userList.innerHTML = '';
     }
     userList.insertAdjacentHTML('beforeend', `
@@ -264,7 +276,7 @@
       }
     });
     if (userList.children.length === 0) {
-      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">Katılımcı bekleniyor...</li>';
+      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">KatÄ±lÄ±mcÄ± bekleniyor...</li>';
     }
     if (voiceChats.size > 0) {
       const vc = voiceChats.get(data.id);
@@ -347,8 +359,11 @@
     currentVideoId = videoId;
     if (playerReady && player) {
       player.loadVideoById(videoId);
-    } else {
+    } else if (window.YT && window.YT.Player) {
       createPlayer(videoId);
+    } else {
+      pendingVideoId = videoId;
+      loadYouTubeAPI();
     }
   };
 
@@ -371,7 +386,7 @@
     muteBtn.addEventListener('click', () => {
       voiceChats.forEach(vc => vc.toggleMute());
       const anyMuted = Array.from(voiceChats.values()).some(vc => vc.isMuted);
-      muteBtn.textContent = anyMuted ? 'Sesi Aç' : 'Sesi Kapat';
+      muteBtn.textContent = anyMuted ? 'Sesi AÃ§' : 'Sesi Kapat';
     });
   }
 
