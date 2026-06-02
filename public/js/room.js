@@ -28,6 +28,7 @@
   let voiceChats = new Map();
   let peerStatuses = new Map();
   const STATUS_PRIORITY = { 'connected': 0, 'muted': 0, 'connecting': 1, 'waiting': 2, 'disconnected': 3, 'mic-error': 4 };
+  const playerDiv = document.getElementById('player');
 
   roomCodeDisplay.textContent = roomId;
   roomLinkDisplay.textContent = `${window.location.origin}/room.html?roomId=${roomId}`;
