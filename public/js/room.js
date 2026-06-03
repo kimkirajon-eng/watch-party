@@ -36,12 +36,12 @@
   const updateVoiceStatus = (status) => {
     if (!voiceStatus) return;
     const icons = {
-      'waiting': 'Sesli sohbet iÃ§in diÄŸer kiÅŸi bekleniyor...',
-      'connecting': 'Sesli sohbet baÄŸlanÄ±yor...',
-      'connected': 'Sesli sohbet baÄŸlandÄ±',
-      'muted': 'Sesiniz kapalÄ±',
-      'disconnected': 'BaÄŸlantÄ± koptu, yeniden baÄŸlanÄ±lÄ±yor...',
-      'mic-error': 'Mikrofona eriÅŸilemedi',
+      'waiting': 'Sesli sohbet için diğer kişi bekleniyor...',
+      'connecting': 'Sesli sohbet bağlanıyor...',
+      'connected': 'Sesli sohbet bağlandı',
+      'muted': 'Sesiniz kapalı',
+      'disconnected': 'Bağlantı koptu, yeniden bağlanılıyor...',
+      'mic-error': 'Mikrofona erişilemedi',
     };
     voiceStatus.textContent = icons[status] || status;
     voiceStatus.className = 'voice-status ' + status;
@@ -201,12 +201,12 @@
 
   const setSyncStatus = (connected) => {
     syncDot.className = `sync-dot ${connected ? '' : 'disconnected'}`;
-    syncLabel.textContent = connected ? 'Senkronize' : 'BaÄŸlantÄ± kesildi';
+    syncLabel.textContent = connected ? 'Senkronize' : 'Bağlantı kesildi';
   };
 
   const updateUserList = (users) => {
     if (!users || users.length === 0) {
-      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">KatÄ±lÄ±mcÄ± bekleniyor...</li>';
+      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">Katılımcı bekleniyor...</li>';
       return;
     }
     userList.innerHTML = users.map(u => `
@@ -259,7 +259,7 @@
 
   socket.on('user-joined', (data) => {
     const items = userList.querySelectorAll('li');
-    if (items.length === 1 && items[0].textContent.includes('KatÄ±lÄ±mcÄ± bekleniyor')) {
+    if (items.length === 1 && items[0].textContent.includes('Katılımcı bekleniyor')) {
       userList.innerHTML = '';
     }
     userList.insertAdjacentHTML('beforeend', `
@@ -283,7 +283,7 @@
       }
     });
     if (userList.children.length === 0) {
-      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">KatÄ±lÄ±mcÄ± bekleniyor...</li>';
+      userList.innerHTML = '<li style="color:#555;justify-content:center;padding:20px">Katılımcı bekleniyor...</li>';
     }
     if (voiceChats.size > 0) {
       const vc = voiceChats.get(data.id);
@@ -391,7 +391,7 @@
     const url = videoUrlInput.value.trim();
     const videoId = extractVideoId(url);
     if (!videoId) {
-      alert('GeÃ§erli bir YouTube linki girin.');
+      alert('Geçerli bir YouTube linki girin.');
       return;
     }
     loadVideoById(videoId);
@@ -413,7 +413,7 @@
     muteBtn.addEventListener('click', () => {
       voiceChats.forEach(vc => vc.toggleMute());
       const anyMuted = Array.from(voiceChats.values()).some(vc => vc.isMuted);
-      muteBtn.textContent = anyMuted ? 'Sesi AÃ§' : 'Sesi Kapat';
+      muteBtn.textContent = anyMuted ? 'Sesi Aç' : 'Sesi Kapat';
     });
   }
 
