@@ -54,6 +54,48 @@
       font-size: 14px;
     }
     .controls input::placeholder { color: #666; }
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .volume-control svg { flex-shrink: 0; opacity: 0.5; }
+    .volume-control input[type="range"] {
+      width: 80px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #333;
+      border-radius: 2px;
+      outline: none;
+      border: none;
+      padding: 0;
+      min-width: auto;
+    }
+    .volume-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+    }
+    .volume-control input[type="range"]::-moz-range-thumb {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: none;
+    }
+    .volume-label {
+      font-size: 12px;
+      color: #888;
+      min-width: 32px;
+      text-align: right;
+    }
     .sidebar {
       display: flex;
       flex-direction: column;
@@ -202,18 +244,26 @@
             <polygon points="23 7 16 12 23 17 23 7" />
             <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
           </svg>
-          <p>Henüz bir video yüklenmedi</p>
-          <p style="font-size:13px">Aşağıdaki kutuya YouTube linkini yapıştırın</p>
+          <p>HenÃ¼z bir video yÃ¼klenmedi</p>
+          <p style="font-size:13px">AÅŸaÄŸÄ±daki kutuya YouTube linkini yapÄ±ÅŸtÄ±rÄ±n</p>
         </div>
         <div id="player"></div>
       </div>
 
       <div class="controls">
-        <input type="text" id="videoUrlInput" placeholder="YouTube linkini yapıştır..." />
-        <button class="btn btn-primary" id="loadVideoBtn" style="padding:10px 20px;white-space:nowrap">Yükle</button>
+        <input type="text" id="videoUrlInput" placeholder="YouTube linkini yapÄ±ÅŸtÄ±r..." />
+        <button class="btn btn-primary" id="loadVideoBtn" style="padding:10px 20px;white-space:nowrap">YÃ¼kle</button>
         <div class="sync-status">
           <span class="sync-dot" id="syncDot"></span>
           <span id="syncLabel">Senkronize</span>
+        </div>
+        <div class="volume-control">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+          <input type="range" id="volumeSlider" min="0" max="100" value="100" />
+          <span class="volume-label" id="volumeLabel">100%</span>
         </div>
       </div>
     </div>
@@ -222,13 +272,13 @@
       <div class="card">
         <h3>Odadaki Herkes</h3>
         <ul class="user-list" id="userList">
-          <li style="color:#555;justify-content:center;padding:20px">Katılımcı bekleniyor...</li>
+          <li style="color:#555;justify-content:center;padding:20px">KatÄ±lÄ±mcÄ± bekleniyor...</li>
         </ul>
         <div class="room-info" style="margin-top:12px;padding-top:12px;border-top:1px solid #1a1a2e">
           <p style="margin:0 0 4px 0">Oda Kodu: <code id="roomCodeDisplay"></code></p>
           <p style="margin:0">Link: <code id="roomLinkDisplay"></code></p>
         </div>
-        <button id="leaveBtn" style="margin-top:12px">Odadan Ayrıl</button>
+        <button id="leaveBtn" style="margin-top:12px">Odadan AyrÄ±l</button>
       </div>
 
       <div class="card voice-card">
@@ -240,7 +290,7 @@
             <line x1="12" y1="19" x2="12" y2="23" />
             <line x1="8" y1="23" x2="16" y2="23" />
           </svg>
-          <div id="voiceStatus" class="voice-status waiting">Sesli sohbet için diğer kişi bekleniyor...</div>
+          <div id="voiceStatus" class="voice-status waiting">Sesli sohbet iÃ§in diÄŸer kiÅŸi bekleniyor...</div>
           <button id="muteBtn" class="btn-mute hidden" style="padding:8px 20px;border-radius:20px;border:1px solid #333;background:#1a1a2e;color:#fff;cursor:pointer;font-size:13px">Sesi Kapat</button>
         </div>
       </div>
