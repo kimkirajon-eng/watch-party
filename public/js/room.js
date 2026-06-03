@@ -137,6 +137,12 @@
   const onPlayerReady = () => {
     playerReady = true;
     currentVideoId = player.getVideoData().video_id;
+    const savedVol = localStorage.getItem('watchparty-volume');
+    if (savedVol !== null) {
+      player.setVolume(parseInt(savedVol, 10));
+      volumeSlider.value = savedVol;
+      volumeLabel.textContent = savedVol + '%';
+    }
     requestSync();
     startHeartbeat();
   };
@@ -394,6 +400,13 @@
 
   videoUrlInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') loadVideoBtn.click();
+  });
+
+  volumeSlider.addEventListener('input', () => {
+    const val = parseInt(volumeSlider.value, 10);
+    volumeLabel.textContent = val + '%';
+    if (playerReady && player) player.setVolume(val);
+    localStorage.setItem('watchparty-volume', val);
   });
 
   if (muteBtn) {
