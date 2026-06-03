@@ -391,7 +391,7 @@
     const url = videoUrlInput.value.trim();
     const videoId = extractVideoId(url);
     if (!videoId) {
-      alert('Gecerli bir YouTube linki girin.');
+      alert('GeÃ§erli bir YouTube linki girin.');
       return;
     }
     loadVideoById(videoId);
